@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: 'Note Hub',
     description:
       'A lightweight application for note creation, search, and management, showcasing the power of Next.js with SSR, SSG, and optimized API integration.',
-    url: 'https://07-routing-nextjs-ten-ashy.vercel.app/',
+    url: 'https://08-zustand-six-zeta.vercel.app/',
     images: [
       {
         url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',

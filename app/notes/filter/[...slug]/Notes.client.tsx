@@ -14,13 +14,12 @@ import { NoteTag } from '@/types/note';
 import Link from 'next/link';
 
 type NotesPageProps = {
-  initialData: FetchNotesResponse;
   tag?: NoteTag;
 };
 
 const PER_PAGE = 12;
 
-export default function Notes({ initialData, tag }: NotesPageProps) {
+export default function Notes({ tag }: NotesPageProps) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
 
@@ -33,7 +32,6 @@ export default function Notes({ initialData, tag }: NotesPageProps) {
     queryKey: ['notes', page, search, tag],
     queryFn: () => fetchNotes(page, PER_PAGE, search, tag),
     placeholderData: keepPreviousData,
-    initialData: page === 1 && search === '' ? initialData : undefined,
   });
 
   return (

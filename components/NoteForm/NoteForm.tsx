@@ -5,10 +5,21 @@ import css from './NoteForm.module.css';
 import { CreateNoteFields } from '@/types/note';
 import { createNote } from '@/lib/api';
 import { useNoteDraftStore } from '@/lib/store/noteStore';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function NoteForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { draft, setDraft, clearDraft } = useNoteDraftStore();
+
+  const mutation = useMutation({
+    mutationFn: createNote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notes'] });
+      clearDraft();
+      router.push('/notes/filter/all');
+    },
+  });
 
   const handleSubmit = async (formData: FormData) => {
     const values: CreateNoteFields = {
@@ -16,9 +27,7 @@ export default function NoteForm() {
       content: formData.get('content') as string,
       tag: (formData.get('tag') as CreateNoteFields['tag']) || 'Todo',
     };
-    await createNote(values);
-    clearDraft();
-    router.push('/notes/filter/all');
+    mutation.mutate(values);
   };
 
   const handleChange = (
@@ -84,8 +93,12 @@ export default function NoteForm() {
         >
           Cancel
         </button>
-        <button type="submit" className={css.submitButton}>
-          Create note
+        <button
+          type="submit"
+          className={css.submitButton}
+          disabled={mutation.isPending}
+        >
+          {mutation.isPending ? 'Creating...' : 'Create'}
         </button>
       </div>
     </form>
