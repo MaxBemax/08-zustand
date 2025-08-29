@@ -1,7 +1,5 @@
 'use client';
 
-import Modal from '@/components/Modal/Modal';
-import NoteForm from '@/components/NoteForm/NoteForm';
 import NoteList from '@/components/NoteList/NoteList';
 import Pagination from '@/components/Pagination/Pagination';
 import SearchBox from '@/components/SearchBox/SearchBox';
@@ -13,6 +11,7 @@ import css from './NotesPage.module.css';
 import Loader from '@/components/Loader/Loader';
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage';
 import { NoteTag } from '@/types/note';
+import Link from 'next/link';
 
 type NotesPageProps = {
   initialData: FetchNotesResponse;
@@ -22,7 +21,6 @@ type NotesPageProps = {
 const PER_PAGE = 12;
 
 export default function Notes({ initialData, tag }: NotesPageProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
 
@@ -49,20 +47,14 @@ export default function Notes({ initialData, tag }: NotesPageProps) {
             onPageChange={setPage}
           />
         )}
-        <button className={css.button} onClick={() => setIsModalOpen(true)}>
+        <Link href="/notes/action/create" className={css.button}>
           Create note +
-        </button>
+        </Link>
       </header>
       {isPending && <Loader />}
       {isError && <ErrorMessage />}
 
       {data && data.notes.length > 0 && <NoteList notes={data.notes} />}
-
-      {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
-          <NoteForm onClose={() => setIsModalOpen(false)} />
-        </Modal>
-      )}
     </div>
   );
 }
