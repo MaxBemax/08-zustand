@@ -5,12 +5,13 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 import NoteDetailsClient from './NoteDetails.client';
+import { Metadata } from 'next';
 
 type Props = {
   params: Promise<{ id: string }>;
 };
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const note = await fetchNoteById(id);
   return {
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: Props) {
     openGraph: {
       title: `Note: ${note.title}`,
       description: note.content.slice(0, 100),
-      url: `https://08-zustand-six-zeta.vercel.app/notes/[id]/page.tsx`,
+      url: `https://08-zustand-six-zeta.vercel.app/notes/${id}`,
       images: [
         {
           url: 'https://ac.goit.global/fullstack/react/og-meta.jpg',
